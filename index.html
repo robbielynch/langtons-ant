@@ -1,0 +1,141 @@
+<!doctype html> 
+<html> 
+<head> 
+<title>canvasExample</title> 
+    <meta charset='utf-8' /> 
+    <link rel="stylesheet" href="css/style.css" />
+</head> 
+<body> 
+<canvas height='1000' width='1000' id='mycanvas'></canvas> 
+<script> 
+    /*
+        Author: Robbie Lynch <robbie.lynch@outlook.com>
+    */
+    var canvas = document.getElementById("mycanvas");
+    ctx = canvas.getContext('2d');
+    
+    /* Canvas width and height */
+    var cwidth = 1000;
+    var cheight = 1000;
+    
+    /* Create empty 2d array */
+    var array = new Array(cwidth);
+    for (var i = 0; i < cwidth; i++) {
+        array[i] = new Array(cwidth);
+    }
+    
+    /* Directional Variables */
+    var RIGHT = "right";
+    var LEFT = "left";
+    var UP = "up";
+    var DOWN = "down";
+    
+    /* Metrics */
+    var rectDiameter = 5;
+    var x = cwidth / 2;
+    var y = cheight / 2;
+    var interval = 0; //milliseconds
+    var direction = UP;
+    
+    
+    
+    /* RULES */
+    /* 
+        - At a white square, turn 90° right, flip the color of the square, move forward one unit
+        - At a black square, turn 90° left, flip the color of the square, move forward one unit
+    */
+    
+    
+    /* First Step will be */
+    /* 
+        Draw first rect in the middle of the canvas - ant facing up
+        It lands on a white square first
+        Change direction
+        Colour in rect
+        Move in direction
+    */
+    
+    
+    /* Run this code every "interval" seconds */
+    setInterval(function(){
+        
+        /* Check array to determine what direction to turn */
+        if(array[x][y] === 0){
+            /* White square, turn 90° right */
+            if(direction == UP){
+                direction = RIGHT;
+            }else if(direction == LEFT){
+                direction = UP;
+            }else if(direction == DOWN){
+                direction = LEFT;
+            }else{
+                /* direction is RIGHT, change to DOWN */
+                direction = DOWN;
+            }
+        }
+        else {
+            /* array[x][y] === 1 */
+            /* Coloured square, turn 90° left */
+            if(direction == UP){
+                direction = LEFT;
+            }else if(direction == LEFT){
+                direction = DOWN;
+            }else if(direction == DOWN){
+                direction = RIGHT;
+            }else{
+                /* Direction is RIGHT, change to UP */
+                direction = UP;
+            }
+        }
+        
+
+        /* Flip the colour of the square */
+        if(array[x][y] === 0){
+            ctx.fillStyle = "#2f2f2f";
+            ctx.fillRect(x, y + rectDiameter, rectDiameter, rectDiameter);
+
+            /* Record that rect has been filled */
+            array[x][y] = 1;
+        }else{
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(x, y + rectDiameter, rectDiameter, rectDiameter);
+
+            /* Record that rect has been filled */
+            array[x][y] = 0;
+        }
+        
+
+        /* Move forward one unit */
+        if(direction == RIGHT){
+            //move x to the right
+            x += rectDiameter;
+            //no need to change y
+        }
+        else if(direction == UP){
+            //no need to change x
+            //move y up
+            y += rectDiameter;
+        }
+        else if(direction == LEFT){
+            //move x to the left
+            x -= rectDiameter;
+            //no need to change y
+        }
+        else{
+            //direction == DOWN
+            //no need to change x
+            //move y down
+            y -=rectDiameter;
+        }
+
+        
+        /* To represent the ant - Colour the current rect red */
+        ctx.fillStyle="#ff0000";
+        ctx.fillRect(x, y + rectDiameter, rectDiameter, rectDiameter);
+        
+    }, interval)
+    	
+
+ </script>
+ </body>
+ </html>
